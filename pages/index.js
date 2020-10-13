@@ -1,65 +1,51 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Header from "../componets/header.js";
+import Card from "../componets/cards.js";
+import Footer from "../componets/footer.js";
+import { useState, useEffect } from "react";
 
-export default function Home() {
+const Home = (props) => {
+  const [data, setdata] = useState([]);
+  useEffect(() => {
+    setdata(props.post.articles);
+  }, []);
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+    <>
+      <Header />
+      <main>
+        <section className="home-cover">
+          <img src="../image/ee782db0-8576-11ea-a8c8-4115a993fbdf.png" alt="" />
+          <div className="overlay">
+            <div className="container">
+              <h1>Simple Blog.</h1>
+              <p>A blog created by Mustafa Hiader</p>
+            </div>
+          </div>
+        </section>
+        <section className="container blog-list">
+          {data.map((el) => (
+            <Card key={el.id} article={el} />
+          ))}
+        </section>
       </main>
+      <Footer />
+    </>
+  );
+};
+// export async function getStaticProps({ params }) {
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+//   const res = await fetch(`https://mashriq.herokuapp.com/dash/v1/articles`);
+//   const post = await res.json()
+
+//   return { props: { post } }
+// }
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`https://mashriq.herokuapp.com/dash/v1/articles`);
+  const post = await res.json();
+
+  // Pass data to the page via props
+  return { props: { post } };
 }
+
+export default Home;
